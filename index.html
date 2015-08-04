@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Fastest Twitter Ever</title>
+	
+	<link href="style.css" rel="stylesheet" type="text/css">
+	
+</head>
+<body>
+	<p>accuracy: <span class="currently"></span></p>
+	
+	<section class="tweet">
+		<p class="tweet-meta"><span class="author"></span> <span class="link"></span></p>
+		<p class="tweet-body"></p>
+	</section>
+	
+	<script src="https://cdn.pubnub.com/pubnub.min.js"></script>
+	<script src="fpsmeter.js"></script>
+	<script>
+	var stats = new Stats();
+	stats.setMode( 0 ); // 0: fps, 1: ms, 2: mb
+	
+	// align top-left
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.right = '0px';
+	stats.domElement.style.top = '0px';
+	
+	document.body.appendChild( stats.domElement );
+	
+	var update = function () {
+	
+		stats.begin();
+	
+		// monitored code goes here
+	
+		stats.end();
+	
+		requestAnimationFrame( update );
+	
+	};
+	
+	requestAnimationFrame( update );
+	
+	PUBNUB({
+		subscribe_key: 'sub-c-78806dd4-42a6-11e4-aed8-02ee2ddab7fe'
+	}).subscribe({
+		channel : 'pubnub-twitter',
+		message : function(tweet) {
+	
+			// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+			// Receive Tweets in your Browser! 
+			// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+			console.log(tweet);
+			if (tweet.lang === 'en') {
+				document.querySelector('.tweet-body').innerHTML = tweet.text;
+				document.querySelector('.author').innerHTML = '@' + tweet.user.screen_name;
+				document.querySelector('.link').innerHTML = 'via ' + tweet.source;
+			}
+			
+			setInterval(function() {
+				var date = new Date().getTime();
+				var date2 = new Date(tweet.created_at).getTime();
+				document.querySelector('.currently').innerHTML = '~' + (date - date2) + 'ms';
+			}, 1);
+	
+		}
+	});
+	</script> 
+	
+</body>
+</html>

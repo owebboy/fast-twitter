@@ -1,0 +1,13 @@
+html {
+	font: normal 2rem "Helvetica Neue", Arial, Helvetica, sans-serif;
+	color: #111;
+}
+
+a {
+	color: #0074D9;
+	text-decoration: none;
+}
+
+.tweet-body {
+	font-size: 3em;
+}
